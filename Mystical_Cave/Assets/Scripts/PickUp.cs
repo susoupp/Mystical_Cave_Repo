@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -17,6 +18,9 @@ public class PickUp : MonoBehaviour
     [Header("Physics Parameters")]
     [SerializeField] private float pickupRange = 5.0f;
     [SerializeField] private float pickupForce = 150.0f;
+    [SerializeField] private TextMeshProUGUI itemPickUpText;
+   [SerializeField] private LayerMask itemMask;
+   
 
     [Header("Keybinds")]
     public KeyCode resetKey = KeyCode.R;
@@ -24,9 +28,12 @@ public class PickUp : MonoBehaviour
     [Header("Fixes")]
     private float startScale;
 
+
+   
     private void Start()
     {
         startScale = transform.localScale.y;
+        
     }
 
     private void Update()
@@ -36,18 +43,25 @@ public class PickUp : MonoBehaviour
             if(heldObj == null)
             {
                 RaycastHit hit;
-                if(Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, pickupRange))
+                if(Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, pickupRange, itemMask))
                 {
                     PickupObject(hit.transform.gameObject);
                     isSmthHeld = true;
+                   
+                        itemPickUpText.gameObject.SetActive(true);
+                    
+                    
+                    
                   
                     
                 }
             }
+            
             else
             {
                 DropObject();
                 isSmthHeld = false;
+                itemPickUpText.gameObject.SetActive(false);
              
             }
         }
